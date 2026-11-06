@@ -1,0 +1,24 @@
+{
+  "seeds": [
+    281,
+    292,
+    303,
+    314,
+    325
+  ],
+  "caps": [
+    32,
+    64
+  ],
+  "conditions": [
+    "full",
+    "full_scaled",
+    "masked",
+    "masked_scaled",
+    "compact"
+  ],
+  "position_scale": 0.5,
+  "records": 128,
+  "masked_records": 64,
+  "reference": "outputs/distractor-geometry/results.json"
+}

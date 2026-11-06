@@ -1,0 +1,25 @@
+{
+  "seeds": [
+    281,
+    292,
+    303,
+    314,
+    325
+  ],
+  "caps": [
+    32,
+    64
+  ],
+  "lengths": [
+    32,
+    64,
+    96,
+    128
+  ],
+  "window": 16,
+  "scale": 0.5,
+  "population": 101000000,
+  "examples_per_cell": 32,
+  "replicates": 2,
+  "gate": "compress iff records > training cap"
+}

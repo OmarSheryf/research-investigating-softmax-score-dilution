@@ -1,0 +1,21 @@
+{
+  "seeds": [
+    171,
+    182,
+    193,
+    204,
+    215
+  ],
+  "arms": [
+    "joint_interleaved",
+    "joint_curriculum",
+    "retrieval_first",
+    "retrieval_first_curriculum"
+  ],
+  "updates": 1200,
+  "input_tokens": 832000,
+  "composition_switch": 601,
+  "validation_population": 51000000,
+  "test_population": 61000000,
+  "pass_threshold": 0.95
+}

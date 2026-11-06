@@ -1,0 +1,49 @@
+{
+  "seeds": [
+    281,
+    292,
+    303,
+    314,
+    325
+  ],
+  "prefix": [
+    [
+      4,
+      400
+    ],
+    [
+      8,
+      400
+    ],
+    [
+      16,
+      199
+    ],
+    [
+      32,
+      105
+    ]
+  ],
+  "suffixes": {
+    "32": 131,
+    "64": 67
+  },
+  "budget": 1112864,
+  "primary_length": 128,
+  "test_lengths": [
+    32,
+    64,
+    128
+  ],
+  "test_population": 81000000,
+  "positions": [
+    0,
+    0.25,
+    0.5,
+    0.75,
+    1
+  ],
+  "composition_starts": 601,
+  "learning_rate": 0.002,
+  "batch_size": 32
+}

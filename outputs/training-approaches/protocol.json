@@ -1,0 +1,26 @@
+{
+  "seeds": [
+    116,
+    127,
+    138,
+    149,
+    160
+  ],
+  "arms": [
+    "joint_interleaved",
+    "joint_curriculum",
+    "retrieval_first"
+  ],
+  "steps": 1200,
+  "learning_rate": 0.002,
+  "retrieval_only_updates": 600,
+  "validation_population": 31000000,
+  "test_population": 41000000,
+  "validation_steps": [
+    300,
+    600,
+    900,
+    1200
+  ],
+  "success_threshold": 0.95
+}

@@ -1,0 +1,25 @@
+{
+  "winner": "curriculum",
+  "rankings": [
+    {
+      "setting": "baseline",
+      "success_count": 1,
+      "worst_score": 0.125,
+      "mean_score": 0.4879557291666667
+    },
+    {
+      "setting": "warmup_cosine",
+      "success_count": 0,
+      "worst_score": 0.13671875,
+      "mean_score": 0.26308593750000003
+    },
+    {
+      "setting": "curriculum",
+      "success_count": 3,
+      "worst_score": 0.99921875,
+      "mean_score": 0.9999348958333334
+    }
+  ],
+  "selection_time_seconds": 356.0499153137207,
+  "confirmation_started": false
+}

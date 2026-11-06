@@ -1,0 +1,41 @@
+{
+  "development_seeds": [
+    11,
+    33,
+    44
+  ],
+  "confirmation_seeds": [
+    61,
+    72,
+    83,
+    94,
+    105
+  ],
+  "development_seed_note": "Previously observed seeds, including two known unsuccessful seeds; only confirmation seeds are fresh.",
+  "settings": [
+    "baseline",
+    "warmup_cosine",
+    "curriculum"
+  ],
+  "steps": 1200,
+  "batch": 32,
+  "tokens_per_run": 832000,
+  "architecture": "Unchanged 126608-parameter causal RoPE transformer",
+  "penalty": "none",
+  "attention_scaling": "off",
+  "objective": "read CE + learned composition CE",
+  "success": "At least 95% single-fact AND composition accuracy at BOTH 8 and 16 records, averaging 5 positions x 2 populations x 128 examples",
+  "selection": "Maximize development seed success count, then minimum per-seed/task/length accuracy, then mean accuracy; ties retain SETTINGS order",
+  "development_population": 17000000,
+  "confirmation_population": 21000000,
+  "confirmation_lengths": [
+    8,
+    16,
+    32,
+    64
+  ],
+  "torch_version": "2.13.0+cpu",
+  "python_version": "3.11.9",
+  "source_sha256": "e41c17c88f3e6f08a907e93ce864cfccc9f13e1217c522ab3eedd38dd4fa2fa9",
+  "model_source_sha256": "e92dcd0706d499c7989e91ec28377725decdb24ea4dd2434c7ad04e17588adfa"
+}

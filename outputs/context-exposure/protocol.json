@@ -1,0 +1,42 @@
+{
+  "seeds": [
+    226,
+    237,
+    248,
+    259,
+    270
+  ],
+  "shared_schedule": [
+    [
+      4,
+      400
+    ],
+    [
+      8,
+      400
+    ],
+    [
+      16,
+      199
+    ]
+  ],
+  "suffixes": {
+    "cap16": [
+      16,
+      201
+    ],
+    "cap32": [
+      32,
+      105
+    ]
+  },
+  "budget": 832000,
+  "composition_starts": 601,
+  "test_lengths": [
+    16,
+    32,
+    64
+  ],
+  "test_population": 71000000,
+  "learning_rate": 0.002
+}

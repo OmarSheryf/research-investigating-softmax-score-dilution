@@ -1,0 +1,35 @@
+{
+  "winner": "curriculum",
+  "confirmation": {
+    "baseline": {
+      "success_count": 0,
+      "total": 5,
+      "wilson95": [
+        5.551115123125783e-17,
+        0.4344824647831612
+      ],
+      "mean_score": 0.41531250000000003,
+      "worst_score": 0.13515625
+    },
+    "curriculum": {
+      "success_count": 1,
+      "total": 5,
+      "wilson95": [
+        0.036224108632431695,
+        0.6244653702374652
+      ],
+      "mean_score": 0.5332421875,
+      "worst_score": 0.159375
+    }
+  },
+  "paired_mean_accuracy_change": [
+    0.11792968749999999,
+    -0.6364506876840267,
+    0.8723100626840267
+  ],
+  "paired_success_improvements": 1,
+  "paired_success_regressions": 0,
+  "exact_mcnemar_p": 1,
+  "evaluation_cells": 580,
+  "checkpoint_count": 51
+}

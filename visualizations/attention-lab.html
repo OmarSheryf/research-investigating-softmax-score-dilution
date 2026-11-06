@@ -1,0 +1,62 @@
+<div id="attention-lab">
+<h2>Attention intervention lab</h2>
+<div class="text-small text-muted">Synthetic single-head experiment · 128 paired trials per run · no real-model measurements</div>
+<div class="viz-controls">
+<label class="form-label">Context tokens<select class="form-select" data-k="n"><option>256</option><option>1024</option><option selected>4096</option><option>16384</option></select></label>
+<label class="form-label">Evidence position<select class="form-select" data-k="pos"><option value="0.05">Beginning</option><option value="0.5" selected>Middle</option><option value="0.95">End</option></select></label>
+<label class="form-label">Hard distractors<select class="form-select" data-k="hard"><option value="0">None</option><option value="4" selected>4</option><option value="16">16</option></select></label>
+<label class="form-label">Intervention<select class="form-select" data-k="method"><option value="scale">Length-aware scaling</option><option value="position">Remove imposed position penalty</option><option value="route">Route to 64 candidates</option><option value="combined">Scaling + position correction</option></select></label>
+<label class="form-label">Signal advantage <span id="al-gap"></span><input class="form-range" data-k="gap" type="range" min="2" max="12" step="0.5" value="8"></label>
+<label class="form-label">Imposed middle penalty <span id="al-bias"></span><input class="form-range" data-k="bias" type="range" min="0" max="6" step="0.5" value="3"></label>
+</div>
+<div class="viz-row"><button class="btn btn-primary" id="al-run" type="button">Run &amp; record comparison</button><span class="text-small text-muted">Fixed seed: 42 · routing evidence retention: 90%</span></div>
+<div id="al-results" aria-live="polite"></div>
+<h3>Recorded experiments</h3>
+<div class="table-responsive"><table class="table table-sm"><thead><tr><th>Run / intervention</th><th>Settings</th><th>Target mass, before → after</th><th>Top-1, before → after</th></tr></thead><tbody id="al-history"></tbody></table></div>
+</div>
+<style>
+#attention-lab{display:grid;gap:calc(var(--font-size-base)*1)}
+#attention-lab .al-measure{display:grid;gap:calc(var(--font-size-base)*.4);margin-block:calc(var(--font-size-base)*.8)}
+#attention-lab .al-row{display:grid;grid-template-columns:90px 1fr 64px;gap:8px;align-items:center}
+#attention-lab .al-track{background:var(--muted);height:16px;overflow:hidden}
+#attention-lab .al-fill{height:100%;background:var(--viz-series-1)}
+#attention-lab .al-base{background:var(--viz-series-2)}
+#attention-lab .al-value{text-align:right;font-variant-numeric:tabular-nums}
+</style>
+<script>
+(()=>{
+const root=document.getElementById('attention-lab');
+const fields=[...root.querySelectorAll('[data-k]')];
+let history=[];
+function restore(s){if(!s)return;fields.forEach(e=>{if(s.settings&&s.settings[e.dataset.k]!==undefined)e.value=s.settings[e.dataset.k]});history=Array.isArray(s.history)?s.history.slice(-10):[];draw();}
+function settings(){return Object.fromEntries(fields.map(e=>[e.dataset.k,e.value]));}
+function rng(seed){return ()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return ((t^t>>>14)>>>0)/4294967296;};}
+function evaluate(s){const rand=rng(42),normal=()=>Math.sqrt(-2*Math.log(Math.max(rand(),1e-9)))*Math.cos(2*Math.PI*rand());let mass=[0,0],wins=[0,0],retained=0;
+const n=+s.n,penalty=+s.bias*4*(+s.pos)*(1-(+s.pos));
+for(let t=0;t<128;t++){
+const target=+s.gap+normal();const distractors=Array.from({length:n-1},(_,i)=>normal()+(i<+s.hard?+s.gap-1:0));
+const keep=rand()<.9;let routed=distractors.slice(0,63);retained+=keep?1:0;
+for(let k=0;k<2;k++){
+const correction=k&&(s.method==='position'||s.method==='combined');
+const scale=k&&(s.method==='scale'||s.method==='combined')?Math.max(1,Math.log(n)/Math.log(256)):1;
+const routing=k&&s.method==='route';
+const ts=(target-(correction?0:penalty))*scale;
+const ds=(routing?routed:distractors).map(x=>x*scale);
+const included=!routing||keep;
+const mx=Math.max(included?ts:-Infinity,...ds),numer=included?Math.exp(ts-mx):0;
+mass[k]+=numer/(numer+ds.reduce((a,x)=>a+Math.exp(x-mx),0));
+wins[k]+=included&&ds.every(x=>ts>x)?1:0;
+}}
+return {mass:mass.map(x=>x/128),wins:wins.map(x=>x/128),retained:retained/128};}
+const pct=x=>(100*x).toFixed(1)+'%';
+const names={scale:'Length scaling',position:'Position correction',route:'Routing',combined:'Scaling + position'};
+function draw(){const s=settings(),r=evaluate(s);root.querySelector('#al-gap').textContent=s.gap;root.querySelector('#al-bias').textContent=s.bias;
+root.querySelector('#al-results').innerHTML=[['Mean attention on evidence',r.mass],['Evidence ranked first',r.wins]].map(([label,vs])=>'<div class="al-measure"><h3>'+label+'</h3>'+vs.map((v,i)=>'<div class="al-row"><span>'+(i?'Intervention':'Baseline')+'</span><div class="al-track" role="meter" aria-label="'+label+' '+(i?'intervention':'baseline')+'" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+(100*v).toFixed(1)+'"><div class="al-fill '+(i?'':'al-base')+'" style="width:'+100*v+'%"></div></div><span class="al-value">'+pct(v)+'</span></div>').join('')+'</div>').join('');
+root.querySelector('#al-history').innerHTML=history.map((h,i)=>'<tr><td>'+ (i+1)+' · '+names[h.s.method]+'</td><td>'+h.s.n+' tokens · '+h.s.pos+' position · '+h.s.hard+' hard · gap '+h.s.gap+' · penalty '+h.s.bias+'</td><td>'+h.r.mass.map(pct).join(' → ')+'</td><td>'+h.r.wins.map(pct).join(' → ')+'</td></tr>').join('')||'<tr><td colspan="4">No recorded runs</td></tr>';return {s,r};}
+function save(){if(window.openai&&window.openai.setWidgetState)window.openai.setWidgetState({modelContent:{settings:settings(),history},privateContent:null}).catch(()=>{});}
+fields.forEach(e=>e.addEventListener('input',()=>{draw();save();}));
+root.querySelector('#al-run').addEventListener('click',()=>{const {s,r}=draw();history.push({s,r});history=history.slice(-10);draw();save();});
+window.addEventListener('openai:set_globals',e=>restore(e.detail?.globals?.widgetState?.modelContent));
+restore(window.openai?.widgetState?.modelContent);draw();
+})();
+</script>

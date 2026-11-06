@@ -1,0 +1,26 @@
+{
+  "seeds": [
+    281,
+    292,
+    303,
+    314,
+    325
+  ],
+  "caps": [
+    32,
+    64
+  ],
+  "window": 16,
+  "scale": 0.5,
+  "records": 128,
+  "conditions": [
+    "full",
+    "full_scaled",
+    "local_preserved"
+  ],
+  "primary": [
+    "composition",
+    "early_first",
+    "early_second"
+  ]
+}
