@@ -1,0 +1,27 @@
+{
+  "seeds": [
+    281,
+    292,
+    303,
+    314,
+    325
+  ],
+  "caps": [
+    32,
+    64
+  ],
+  "records": 128,
+  "window": 16,
+  "population": 111000000,
+  "examples_per_cell": 32,
+  "replicates": 2,
+  "modes": [
+    "ordinary",
+    "fixed",
+    "ratio"
+  ],
+  "factors": {
+    "32": 0.2066115702479339,
+    "64": 0.47107438016528924
+  }
+}

@@ -18,20 +18,20 @@ CONDITIONS = ['full', 'full_scaled', 'local_preserved']
 METRICS = ['first', 'second', 'both', 'composition', 'composition_given_both']
 
 
-def forward(model, tokens, window=WINDOW):
+def forward(model, tokens, window=WINDOW, scale=SCALE):
     hidden = model.embed(tokens)
     batch_size, length = tokens.shape
     ids = torch.arange(length, device=tokens.device)
     distance = ids[:, None] - ids[None, :]
     original = ids.expand(batch_size, -1)
-    scaled = original * SCALE
+    scaled = original * scale
     for block in model.blocks:
         qkv = block.attn.qkv(block.n1(hidden)).view(batch_size, length, 3, H, D//H)
         q, k, v = qkv.permute(2, 0, 3, 1, 4).unbind(0)
         freq = block.attn.freq
         near = rotate(q, original, freq) @ rotate(k, original, freq).transpose(-1,-2)
         # The query offset makes the far-region distance continuous at the window edge.
-        far = rotate(q, scaled + (1-SCALE)*window, freq) @ rotate(k, scaled, freq).transpose(-1,-2)
+        far = rotate(q, scaled + (1-scale)*window, freq) @ rotate(k, scaled, freq).transpose(-1,-2)
         logits = torch.where(distance > window, far, near) / ((D//H)**.5)
         attention = logits.masked_fill(distance < 0, float('-inf')).softmax(-1) @ v
         hidden = hidden + block.attn.out(attention.transpose(1,2).reshape(batch_size,length,D))
