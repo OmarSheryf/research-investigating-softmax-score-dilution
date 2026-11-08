@@ -14,6 +14,7 @@ A reproducible study of long-context retrieval and composition in synthetic atte
 | [Masking and compaction](outputs/distractor-geometry/report.md), [uniform RoPE scaling](outputs/rope-compression/report.md) | Removing distractors helped. Compacting the same retained records helped more. Uniform position halving hurt. |
 | [Preserving local RoPE distances](outputs/local-rope-compression/report.md), [fresh length transfer](outputs/rope-length-transfer/report.md) | Preserving the first 16 tokens of separation and halving the excess raised composition from 62.8% to 94.5% at 128 records on fresh examples for the 64-record-trained models. |
 | [Training-span ratio compression](outputs/rope-length-ratio/report.md) | A fixed formula maps the maximum effective distance to the checkpoint's training span while preserving the 16-token local window. Fresh 128-record examples compare it with ordinary RoPE and fixed half-scaling. |
+| [Ratio transfer across lengths](outputs/rope-ratio-transfer/report.md) | The frozen ratio formula is tested on fresh paired examples at 32, 48, 64, 80, 96, and 128 records, including early retrieval and composition. |
 
 The results describe these synthetic tasks and checkpoints. The experiments report paired seed variation, training and test budgets, and where interventions change multiple aspects of the computation.
 
