@@ -1,0 +1,31 @@
+name: Ratio transfer evaluation
+
+on:
+  push:
+    branches: [research/ratio-transfer-validation]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install CPU PyTorch
+        run: python -m pip install torch==2.13.0 --index-url https://download.pytorch.org/whl/cpu
+      - name: Evaluate remaining checkpoint and length pairs
+        run: |
+          python -c 'import platform, torch; print(platform.platform(), torch.__version__)'
+          python -B outputs/test_rope_ratio_transfer.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rope-ratio-transfer
+          path: outputs/rope-ratio-transfer/
+          if-no-files-found: error
